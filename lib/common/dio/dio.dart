@@ -47,4 +47,17 @@ class CustomInterceptor extends Interceptor {
 
 //2) response
 //3) error
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
+    print('[ERR] [${err.requestOptions.method}] ${err.requestOptions.uri}');
+
+    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
+
+    if (refreshToken == null) {
+      return handler.reject(err);
+    }
+
+    return handler.resolve(response);
+  }
 }
