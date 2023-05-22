@@ -3,49 +3,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_new_project/common/dio/dio.dart';
 
 import 'package:flutter_new_project/common/layout/defalut_layout.dart';
+import 'package:flutter_new_project/common/secure_storage/secure_storage.dart';
 import 'package:flutter_new_project/restaurant/component/retaurant_card.dart';
 import 'package:flutter_new_project/restaurant/model/restaurant_detail_model.dart';
 import 'package:flutter_new_project/restaurant/repository/restaurant_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/const/data.dart';
 import '../../product/component/product_card.dart';
 
-class RestaurantDetailScreen extends StatelessWidget {
+class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
 
   const RestaurantDetailScreen({required this.id, Key? key}) : super(key: key);
 
-//받는 형식을 맞게 바꿔줘야 함.
-  Future<RestaurantDetailModel> getRestaurantDetail() async {
-    final dio = Dio();
+  ///provier로 코드 간략화 하기
+// //받는 형식을 맞게 바꿔줘야 함.
+  ///   Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
+  ///     return ref.watch(RestaurantRepositoryProvider).getRestaurantDetail(id: id);
 
-    dio.interceptors.add(
-      CustomInterceptor(
-        storage: storage,
-      ),
-    );
+  // //Appbuilder시 dioProvider
+  // final dio = ref.watch(dioProvider);
 
-    final repository =
-        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
+  // final repository =
+  //     RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
 
-    return repository.getRestaurantDetail(id: id);
+  // return repository.getRestaurantDetail(id: id);
 
-    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+  // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
-    // final resp = await dio.get('http://$ip/restaurant/$id',
-    //     options: Options(headers: {
-    //       'authorization': 'Bear $accessToken',
-  }
+  // final resp = await dio.get('http://$ip/restaurant/$id',
+  //     options: Options(headers: {
+  //       'authorization': 'Bear $accessToken',
+  //}
 
   // ));
 
   // return resp.data;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefalutLayout(
         title: '불타는 떡볶이',
         child: FutureBuilder<RestaurantDetailModel>(
-            future: getRestaurantDetail(),
+            future: ref
+                .watch(restaurantRepositoryProvider)
+                .getRestaurantDetail(id: id),
             builder: (_, AsyncSnapshot<RestaurantDetailModel> snapshot) {
               if (snapshot.hasError) {
                 return Center(child: Text(snapshot.error.toString()));

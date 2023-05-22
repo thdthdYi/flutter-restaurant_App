@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'common/user/view/login_screen.dart';
 import 'common/user/view/splash_screen.dart';
 
 //test@codefactory.ai
@@ -8,7 +8,7 @@ import 'common/user/view/splash_screen.dart';
 //npm start:dev
 
 void main() {
-  runApp(const _App());
+  runApp(const ProviderScope(child: _App()));
 }
 
 class _App extends StatelessWidget {
