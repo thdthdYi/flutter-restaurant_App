@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart' hide Headers;
+import 'package:flutter_new_project/common/model/cursor_pagination_model.dart';
 
 import 'package:flutter_new_project/restaurant/model/restaurant_detail_model.dart';
 import 'package:retrofit/retrofit.dart';
+
+import '../model/restaurant_model.dart';
 
 part 'restaurant_repository.g.dart';
 
@@ -12,8 +15,11 @@ abstract class RestaurantRepository {
       _RestaurantRepository;
 
   // http : // $ip/restaurant/
-  // @GET('/')
-  // paginate();
+  @GET('/')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<CursorPagination<RestaurantModel>> paginate();
 
   //snapshot의 데이터를 가져옴.
   //RestaurantDetailModel과 Mapping중
