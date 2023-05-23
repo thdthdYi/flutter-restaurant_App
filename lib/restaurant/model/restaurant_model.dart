@@ -11,6 +11,9 @@ enum RestaurantPriceRange { expensive, medium, cheap }
 class RestaurantModel {
   final String id;
   final String name;
+  @JsonKey(
+    fromJson: DataUItils.pathToUrl,
+  )
   final String thumbUrl;
   final List<String> tags;
   final RestaurantPriceRange priceRange;
@@ -22,10 +25,7 @@ class RestaurantModel {
   RestaurantModel({
     required this.id,
     required this.name,
-    @JsonKey(
-      fromJson: DataUItils.pathToUrl,
-    )
-        required this.thumbUrl,
+    required this.thumbUrl,
     required this.tags,
     required this.priceRange,
     required this.ratings,

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_new_project/common/dio/dio.dart';
 import 'package:flutter_new_project/common/model/cursor_pagination_model.dart';
+import 'package:flutter_new_project/common/model/pagination_params.dart';
 
 import 'package:flutter_new_project/restaurant/model/restaurant_detail_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,8 @@ import '../../common/const/data.dart';
 import '../model/restaurant_model.dart';
 
 part 'restaurant_repository.g.dart';
+
+//요청 class
 
 ///provider
 final restaurantRepositoryProvider = Provider<RestaurantRepository>((ref) {
@@ -32,7 +35,10 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RestaurantModel>> paginate();
+  Future<CursorPagination<RestaurantModel>> paginate({
+    //PaginationOarams 값들을 쿼리값들로 변환
+    @Queries() PaginationParams? paginationParams = const PaginationParams(),
+  });
 
   //snapshot의 데이터를 가져옴.
   //RestaurantDetailModel과 Mapping중

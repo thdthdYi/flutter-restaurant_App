@@ -8,7 +8,7 @@ part 'restaurant_detail_model.g.dart';
 @JsonSerializable()
 class RestaurantDetailModel extends RestaurantModel {
   final String detail;
-  final List<RestaurantProductModel> product;
+  final List<RestaurantProductModel> products;
 
   RestaurantDetailModel(
       {required super.id,
@@ -21,7 +21,7 @@ class RestaurantDetailModel extends RestaurantModel {
       required super.deliveryTime,
       required super.deliveryFee,
       required this.detail,
-      required this.product});
+      required this.products});
 
   factory RestaurantDetailModel.fromJson(Map<String, dynamic> json) =>
       _$RestaurantDetailModelFromJson(json);

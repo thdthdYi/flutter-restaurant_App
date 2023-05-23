@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_new_project/common/const/color.dart';
@@ -8,11 +6,11 @@ import 'package:flutter_new_project/common/const/data.dart';
 import 'package:flutter_new_project/common/secure_storage/secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../component/custom_text_form.dart';
-import '../../layout/defalut_layout.dart';
+import '../../common/component/custom_text_form.dart';
+import '../../common/layout/defalut_layout.dart';
 import 'package:dio/dio.dart';
 
-import '../../view/root_tqb.dart';
+import '../../common/view/root_tab.dart';
 
 ///
 class LoginScreen extends ConsumerStatefulWidget {

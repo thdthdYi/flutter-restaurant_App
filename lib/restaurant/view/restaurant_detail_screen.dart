@@ -6,16 +6,34 @@ import 'package:flutter_new_project/common/layout/defalut_layout.dart';
 import 'package:flutter_new_project/common/secure_storage/secure_storage.dart';
 import 'package:flutter_new_project/restaurant/component/retaurant_card.dart';
 import 'package:flutter_new_project/restaurant/model/restaurant_detail_model.dart';
+import 'package:flutter_new_project/restaurant/provider/restaurant_provider.dart';
+import 'package:flutter_new_project/restaurant/rating/rating_card.dart';
 import 'package:flutter_new_project/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 import '../../common/const/data.dart';
 import '../../product/component/product_card.dart';
+import '../model/restaurant_model.dart';
 
-class RestaurantDetailScreen extends ConsumerWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
 
   const RestaurantDetailScreen({required this.id, Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
+}
+
+class _RestaurantDetailScreenState
+    extends ConsumerState<RestaurantDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+  }
 
   ///provier로 코드 간략화 하기
 // //받는 형식을 맞게 바꿔줘야 함.
@@ -41,38 +59,57 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
   // return resp.data;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final state = ref.watch(restaurantDetailProvider(widget.id));
+
+    if (state == null) {
+      return const DefalutLayout(
+          child: Center(
+        child: CircularProgressIndicator(),
+      ));
+    }
+
     return DefalutLayout(
         title: '불타는 떡볶이',
-        child: FutureBuilder<RestaurantDetailModel>(
-            future: ref
-                .watch(restaurantRepositoryProvider)
-                .getRestaurantDetail(id: id),
-            builder: (_, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+        child: CustomScrollView(
+          slivers: [
+            renderTop(model: state),
+            if (state is! RestaurantDetailModel) renderLoading(),
+            if (state is RestaurantDetailModel) renderLabel(),
+            if (state is RestaurantDetailModel)
+              rederProducts(
+                products: state.products,
+              ),
+            const SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              sliver: SliverToBoxAdapter(
+                child: RatingCard(
+                  avatarImage:
+                      AssetImage('asset/img/logo/codefactory_logo.png'),
+                  content: 'good',
+                  email: 'js@factory.ai',
+                  images: [],
+                  rating: 4,
+                ),
+              ),
+            )
+          ],
+        ));
+  }
 
-              //snapshot에서 mapping된 item을 얻을 수 있기 때문에 더이상 필요없음.
-              // final item = RestaurantDetailModel.fromJson(
-              //   snapshot.data!,
-              // );
-
-              return CustomScrollView(
-                slivers: [
-                  renderTop(model: snapshot.data!),
-                  renderLabel(),
-                  rederProducts(
-                    products: snapshot.data!.product,
-                  )
-                ],
-              );
-            }));
+  SliverPadding renderLoading() {
+    return SliverPadding(
+        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        sliver: SliverList(
+            delegate: SliverChildListDelegate(List.generate(
+                3,
+                (index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 32.0),
+                      child: SkeletonParagraph(
+                        style: SkeletonParagraphStyle(
+                            lines: 5, padding: EdgeInsets.zero),
+                      ),
+                    )))));
   }
 
   SliverPadding renderLabel() {
@@ -109,7 +146,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
     );
   }
 
-  SliverToBoxAdapter renderTop({required RestaurantDetailModel model}) {
+  SliverToBoxAdapter renderTop({required RestaurantModel model}) {
     return SliverToBoxAdapter(
         child: RestaurantCard.fromModel(
       model: model,

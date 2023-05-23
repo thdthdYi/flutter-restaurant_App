@@ -3,11 +3,11 @@ import "package:flutter/material.dart";
 import "package:flutter_new_project/common/const/color.dart";
 import "package:flutter_new_project/common/layout/defalut_layout.dart";
 import "package:flutter_new_project/common/secure_storage/secure_storage.dart";
-import "package:flutter_new_project/common/user/view/login_screen.dart";
-import "package:flutter_new_project/common/view/root_tqb.dart";
+import 'package:flutter_new_project/user/view/login_screen.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-import "../../const/data.dart";
+import '../../common/const/data.dart';
+import "../../common/view/root_tab.dart";
 
 //프로그램 빌드 시 로딩 화면
 class SplashScreen extends ConsumerStatefulWidget {
