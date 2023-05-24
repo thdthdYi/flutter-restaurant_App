@@ -1,24 +1,50 @@
 import 'package:flutter/material.dart';
-
-import '../../common/const/color.dart';
-
 import 'package:collection/collection.dart';
+import 'package:flutter_new_project/rating/rating_model.dart';
+
+import '../common/const/color.dart';
 
 class RatingCard extends StatelessWidget {
+  // NetworkImage
+  // AssetImage
+  //
+  // CircleAvatar
   final ImageProvider avatarImage;
+
+  // 리스트로 위젯 이미지를 보여줄때
   final List<Image> images;
+
+  // 별점
   final int rating;
+
+  // 이메일
   final String email;
+
+  // 리뷰 내용
   final String content;
 
-  const RatingCard(
-      {Key? key,
-      required this.avatarImage,
-      required this.images,
-      required this.rating,
-      required this.email,
-      required this.content})
-      : super(key: key);
+  const RatingCard({
+    required this.avatarImage,
+    required this.images,
+    required this.rating,
+    required this.email,
+    required this.content,
+    Key? key,
+  }) : super(key: key);
+
+  factory RatingCard.fromModel({
+    required RatingModel model,
+  }) {
+    return RatingCard(
+      avatarImage: NetworkImage(
+        model.user.imageUrl,
+      ),
+      images: model.imgUrls.map((e) => Image.network(e)).toList(),
+      rating: model.rating,
+      email: model.user.username,
+      content: model.content,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +76,15 @@ class RatingCard extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final ImageProvider avatarImage;
-  final int rating;
   final String email;
+  final int rating;
 
-  const _Header(
-      {required this.avatarImage,
-      required this.rating,
-      required this.email,
-      Key? key})
-      : super(key: key);
+  const _Header({
+    required this.avatarImage,
+    required this.rating,
+    required this.email,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

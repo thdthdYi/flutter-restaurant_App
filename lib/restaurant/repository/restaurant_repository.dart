@@ -2,6 +2,7 @@ import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_new_project/common/dio/dio.dart';
 import 'package:flutter_new_project/common/model/cursor_pagination_model.dart';
 import 'package:flutter_new_project/common/model/pagination_params.dart';
+import 'package:flutter_new_project/common/repository/base_pagination_repository.dart';
 
 import 'package:flutter_new_project/restaurant/model/restaurant_detail_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,8 @@ final restaurantRepositoryProvider = Provider<RestaurantRepository>((ref) {
 
 //retrofit 사용법
 @RestApi()
-abstract class RestaurantRepository {
+abstract class RestaurantRepository
+    implements IBasePaginationRepository<RestaurantModel> {
   factory RestaurantRepository(Dio dio, {String baseUrl}) =
       _RestaurantRepository;
 

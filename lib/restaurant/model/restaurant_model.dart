@@ -1,3 +1,4 @@
+import 'package:flutter_new_project/common/model/model_with_id.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../common/const/data.dart';
@@ -8,11 +9,11 @@ part 'restaurant_model.g.dart';
 enum RestaurantPriceRange { expensive, medium, cheap }
 
 @JsonSerializable()
-class RestaurantModel {
+class RestaurantModel implements IModelWithId {
   final String id;
   final String name;
   @JsonKey(
-    fromJson: DataUItils.pathToUrl,
+    fromJson: DataUtils.pathToUrl,
   )
   final String thumbUrl;
   final List<String> tags;

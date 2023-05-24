@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_new_project/common/const/data.dart';
+import 'package:flutter_new_project/user/provider/auth_provider.dart';
+import 'package:flutter_new_project/user/provider/user_me_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -8,17 +10,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
 
-  dio.interceptors.add(CustomInterceptor(storage: storage));
+  dio.interceptors.add(CustomInterceptor(storage: storage, ref: ref));
 
   return dio;
 });
 
 class CustomInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
+  final Ref ref;
 
-  CustomInterceptor({
-    required this.storage,
-  });
+  CustomInterceptor({required this.storage, required this.ref});
 
 //1) request
 /*
@@ -110,6 +111,9 @@ class CustomInterceptor extends Interceptor {
 
       //refresh token을 할 수 없음
       on DioError catch (e) {
+        //circular dependency error > 상위 객체 만들어주기
+        ref.read(authProvider.notifier).logout();
+
         return handler.reject(e); //그대로 에러 반환
       }
     }

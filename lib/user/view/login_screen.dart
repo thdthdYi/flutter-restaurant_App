@@ -1,19 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_new_project/common/const/color.dart';
-import 'package:flutter_new_project/common/const/data.dart';
-import 'package:flutter_new_project/common/secure_storage/secure_storage.dart';
+
+import 'package:flutter_new_project/user/provider/user_me_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/component/custom_text_form.dart';
-import '../../common/layout/defalut_layout.dart';
-import 'package:dio/dio.dart';
+import '../../../common/component/custom_text_form.dart';
+import '../../../common/layout/defalut_layout.dart';
 
-import '../../common/view/root_tab.dart';
+import '../model/user_model.dart';
 
 ///
 class LoginScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'login';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   ///
@@ -29,7 +28,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     //storage open > 프로그램 빌드할 때마다 로그인이 풀리는 것을 방지
 
-    final dio = Dio();
+    final state = ref.watch(userMeProvider);
 
     return DefalutLayout(
       //키보드가 올라왔을 때 뒤 기본 스크린을 스크롤 가능
@@ -73,51 +72,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   height: 16.0,
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    //----------------로그인 구현 기본 흐름 ---------------------
-                    //ID:비밀번호
-                    final rawString = '$username:$password';
+                  onPressed: state is UserModelLoading
+                      ? null
+                      : () async {
+                          ref
+                              .read(userMeProvider.notifier)
+                              .login(username: username, password: password);
+                          // //----------------로그인 구현 기본 흐름 ---------------------
+                          // //ID:비밀번호
+                          // final rawString = '$username:$password';
 
-                    /*
-                    //Id:비밀번호 해당 String을 Base64로 인코딩하여 넣어야함
-                    final rawString = 'test@codefactory.ai:testtest';*/
+                          // /*
+                          // //Id:비밀번호 해당 String을 Base64로 인코딩하여 넣어야함
+                          // final rawString = 'test@codefactory.ai:testtest';*/
 
-                    //일반 String을 Base64로 바꿈
-                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                          // //일반 String을 Base64로 바꿈
+                          // Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
-                    //rawString encode
-                    String token = stringToBase64.encode(rawString);
+                          // //rawString encode
+                          // String token = stringToBase64.encode(rawString);
 
-                    //로그인버튼을 누르면 해당 아이피로 요청
-                    final resp = await dio.post('http://$ip/auth/login',
-                        options: Options(
-                            headers: {'authorization': 'Basic $token'}));
+                          // //로그인버튼을 누르면 해당 아이피로 요청
+                          // final resp = await dio.post('http://$ip/auth/login',
+                          //     options: Options(
+                          //         headers: {'authorization': 'Basic $token'}));
 
-                    //resp에서 token 가져오기
-                    final refreshToken = resp.data['refreshToken'];
-                    final accessToken = resp.data['accessToken'];
+                          // //resp에서 token 가져오기
+                          // final refreshToken = resp.data['refreshToken'];
+                          // final accessToken = resp.data['accessToken'];
 
-                    ///
-                    final storage = ref.read(secureStorageProvider);
+                          // ///
+                          // final storage = ref.read(secureStorageProvider);
 
-                    //저장소에 값 넣어주기
-                    await storage.write(
-                        key: REFRESH_TOKEN_KEY, value: refreshToken);
-                    await storage.write(
-                        key: ACCESS_TOKEN_KEY, value: accessToken);
+                          // //저장소에 값 넣어주기
+                          // await storage.write(
+                          //     key: REFRESH_TOKEN_KEY, value: refreshToken);
+                          // await storage.write(
+                          //     key: ACCESS_TOKEN_KEY, value: accessToken);
 
-                    //토큰 인증이 되면 다음 화면으로 넘어감
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => RootTab(),
-                      ),
-                    );
+                          // //토큰 인증이 되면 다음 화면으로 넘어감
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (_) => RootTab(),
+                          //   ),
+                          // );
 
-                    //refresh Token, access Token > resp body
-                    print(resp.data);
-                  },
+                          // //refresh Token, access Token > resp body
+                          // print(resp.data);
+                        },
                   //----------------------------------------------------------
-                  child: Text('로그인'),
+                  child: const Text('로그인'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PRIMARY_COLOR,
                   ),

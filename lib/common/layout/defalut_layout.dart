@@ -6,14 +6,16 @@ class DefalutLayout extends StatelessWidget {
 
   final String? title;
   final Widget? bottomNavigationBar;
+  final Widget? floatingActionButton;
 
-  const DefalutLayout(
-      {required this.child,
-      this.backgroundColor,
-      Key? key,
-      this.title,
-      this.bottomNavigationBar})
-      : super(key: key);
+  const DefalutLayout({
+    required this.child,
+    this.backgroundColor,
+    Key? key,
+    this.title,
+    this.bottomNavigationBar,
+    this.floatingActionButton,
+  }) : super(key: key);
 
 //모든 view에 적용하고 싶은 Layout을 이곳에 적용하면 됌.
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class DefalutLayout extends StatelessWidget {
       appBar: renderAppBar(),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: floatingActionButton,
     );
   }
 

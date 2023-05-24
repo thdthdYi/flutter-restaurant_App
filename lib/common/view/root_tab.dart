@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../order/view/order_screen.dart';
+import '../../product/view/product_screen.dart';
 import '../../restaurant/view/restaurant_screen.dart';
 import '../../common/layout/defalut_layout.dart';
+import '../../user/view/profile_screen.dart';
 import '../const/color.dart';
 
 class RootTab extends StatefulWidget {
@@ -44,14 +47,16 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return DefalutLayout(
       title: '딜리버리',
+
+      // ignore: sort_child_properties_last
       child: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          RestaurantScreen(),
-          RestaurantScreen(),
-          RestaurantScreen(),
-          RestaurantScreen(),
+          const RestaurantScreen(),
+          ProductScreen(),
+          const OrderScreen(),
+          const ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -64,7 +69,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
           controller.animateTo(index);
         },
         currentIndex: index,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             label: '홈',
@@ -86,5 +91,3 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
     );
   }
 }
-
-class ProductScreen {}
