@@ -1,16 +1,5 @@
-# flutter_new_project
+# flutter restaurant 강의 수강 프로젝트
 
-A new Flutter project.
+상태관리 라이브러리 - riverpod
+api 통신 라이브러리 - dio
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
